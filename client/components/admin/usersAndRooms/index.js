@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Avatar, Box, Tabs, Table, TextInput, Tile, Pagination, Icon, Flex, Skeleton } from '@rocket.chat/fuselage';
+import React, { useState } from 'react';
+import { Avatar, Box, Tabs, Table } from '@rocket.chat/fuselage';
 
 import { Page } from '../../basic/Page';
 import { useTranslation } from '../../../contexts/TranslationContext';
@@ -10,7 +10,7 @@ export function UsersAndRooms(props) {
 	const t = useTranslation();
 	const [tab, setTab] = useState('users');
 	return <Avatar.Context.Provider value={{ baseUrl: '/avatar/' }}>
-		<Page>
+		<Page {...props}>
 			<Page.Header title={t('Users_and_rooms')} />
 			<Tabs>
 				<Tabs.Item selected={tab === 'users'} onClick={() => setTab('users') }>{t('Users')}</Tabs.Item>
