@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Session } from 'meteor/session';
 import { Tracker } from 'meteor/tracker';
 import { Blaze } from 'meteor/blaze';
 import { FlowRouter } from 'meteor/kadira:flow-router';
@@ -177,6 +178,7 @@ export const RoomManager = new function() {
 				const openedRoom = openedRooms[key];
 				this.close(openedRoom.typeName);
 			});
+			Session.set('openedRoom');
 		}
 
 
@@ -244,10 +246,13 @@ export const RoomManager = new function() {
 			const [messagesBox] = dom.getElementsByClassName('messages-box');
 			const scrollTop = $('> .wrapper', messagesBox).scrollTop() - 50;
 			const totalHeight = $(' > .wrapper > ul', messagesBox).height() + 40;
+			if (!ticksBar) {
+				return;
+			}
 
 			// TODO: thread quotes should NOT have mention links at all
 			const mentionsSelector = '.message .body .mention-link--me, .message .body .mention-link--group';
-			ticksBar.innerHTML = Array.from(messagesBox.querySelectorAll(mentionsSelector))
+			ticksBar.innerHTML = Array.from(messagesBox?.querySelectorAll(mentionsSelector) || [])
 				.map((mentionLink) => {
 					const topOffset = $(mentionLink).offset().top + scrollTop;
 					const percent = (100 / totalHeight) * topOffset;
